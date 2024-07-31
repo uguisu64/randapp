@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=UTF-8>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>rand app</title>
+    </head>
+    <body>
+        <h1>rand app</h1>
+        <input type="text" id="numberInput" placeholder="平均値を入力してください">
+        <button onclick="download_file()">get file</button>
+
+        <script>
+            function download_file() {
+            const number = document.getElementById('numberInput').value;
+            
+            // 数値に基づいてファイルURLを決定します
+            if (!number) {
+                number = '0'
+            }
+            let fileUrl = '/get_data/' + number
+
+            // ファイルをダウンロードします
+            fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = fileUrl.split('/').pop() + '.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(() => alert('ファイルのダウンロードに失敗しました。'));
+        }
+        </script>
+    </body>
+</html>
